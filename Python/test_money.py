@@ -60,11 +60,21 @@ class TestMoney(unittest.TestCase):
       portfolio.evaluate(self.bank, 'Kalganid')
 
   def test_conversion(self):
-    bank = Bank()
-    bank.add_exchange_rate('EUR', 'USD', 1.2)
+    self.bank.add_exchange_rate('EUR', 'USD', 1.2)
     tenEuros = Money(10, 'EUR')
     expectedValue = Money(12, 'USD')
-    actualValue = bank.convert(tenEuros, 'USD')
+    actualValue = self.bank.convert(tenEuros, 'USD')
+    self.assertEqual(actualValue, expectedValue, '%s != %s' % (expectedValue, actualValue))
+
+    self.bank.add_exchange_rate('EUR', 'USD', 1.3)
+    expectedValue = Money(13, 'USD')
+    actualValue = self.bank.convert(tenEuros, 'USD')
+    self.assertEqual(actualValue, expectedValue, '%s != %s' % (expectedValue, actualValue))
+
+  def test_what_is_the_conversion_rate_from_EUR_to_USD(self):
+    tenEuros = Money(10, 'EUR')
+    expectedValue = Money(12, 'USD')
+    actualValue = self.bank.convert(tenEuros, 'USD')
     self.assertEqual(actualValue, expectedValue, '%s != %s' % (expectedValue, actualValue))
 
   def test_conversion_with_missing_exchange_rate(self):
